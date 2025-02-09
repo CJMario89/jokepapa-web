@@ -50,7 +50,10 @@ const MintModal = ({ asset }: { asset: Asset }) => {
         }`}
       />
       <DialogTrigger asChild>
-        <Button className="rounded-full mt-2 text-2xl pt-1" size="lg">
+        <Button
+          className="rounded-full mt-2 text:xl sm:text-2xl pt-1"
+          size="lg"
+        >
           Buy ${asset.symbol}
         </Button>
       </DialogTrigger>

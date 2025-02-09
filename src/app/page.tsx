@@ -76,11 +76,11 @@ export default function Home() {
             height={50}
           />
           <div className="font-normal hidden sm:block">Follow on</div>
-          <Link href="">
+          <Link href="https://jokepapa.fun">
             <IconX />
           </Link>
         </div>
-        <div className="flex gap-2 items-center text-xl sm:text-5xl text-center font-bold justify-center">
+        <div className="flex gap-2 items-center text-2xl sm:text-5xl text-center font-bold justify-center">
           Jokepapa
         </div>
         <div className="flex gap-2 items-center justify-end">
@@ -95,7 +95,7 @@ export default function Home() {
           height={690}
         />
       </div>
-      <div className="flex gap-2 items-center text-xl sm:text-5xl text-center font-bold justify-center">
+      <div className="flex gap-2 items-center text-2xl sm:text-5xl text-center font-bold justify-center">
         Trending Jokes...
       </div>
 
@@ -105,17 +105,17 @@ export default function Home() {
             key={asset.id}
             className="flex flex-col gap-2 items-center bg-[#15202B] p-4 pt-3 rounded-lg"
           >
-            <div className="text-3xl font-bold flex-1 flex gap-2 items-center">
+            <div className="text:2xl sm:text-3xl font-bold flex-1 flex gap-2 items-center">
               <Image
                 src={asset.iconUrl}
                 alt={asset.symbol}
-                className="rounded-full"
+                className="rounded-full w-[20px] h-[20px] sm:w-[30px] sm:h-[30px]"
                 width={30}
                 height={30}
               />
               <div className="mt-1">${asset.symbol}</div>
               <Link href={asset.tokenUrl} target="_blank">
-                <ExternalLinkIcon />
+                <ExternalLinkIcon className="w-4 h-4 sm:w-6 sm:h-6" />
               </Link>
             </div>
             <div className="block w-full h-full">
