@@ -40,20 +40,23 @@ const ConnectButton = () => {
             <MenubarTrigger>
               <div className="flex items-center gap-2">
                 <IconWallet />
-                <div className="items-center">
+                <div className="items-center mt-1">
                   {currentAccount?.address
                     ? formatAddress(currentAccount?.address)
                     : ""}
                 </div>
               </div>
             </MenubarTrigger>
-            <MenubarContent className="gap-2 bg-[#111111] rounded-lg">
+            <MenubarContent
+              align="end"
+              className="gap-2 p-2 bg-[#111111] rounded-lg"
+            >
               {accounts.map((account) => (
                 <MenubarItem key={account.address}>
                   <Button
                     onClick={() => switchAccount({ account })}
                     variant="ghost"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 w-full"
                     size="sm"
                   >
                     {account.address === currentAccount?.address && (
@@ -71,6 +74,7 @@ const ConnectButton = () => {
                     setOpen(false);
                   }}
                   variant="ghost"
+                  className="w-full"
                 >
                   Disconnect
                 </Button>

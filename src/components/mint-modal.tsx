@@ -135,7 +135,7 @@ const MintModal = ({ asset }: { asset: Asset }) => {
           <Button
             type="button"
             size="icon"
-            className="top-4 right-4"
+            className="top-4 right-4 hover:!bg-[#05101B] active:!bg-[#05101B]"
             variant="ghost"
           >
             <IconClose />
