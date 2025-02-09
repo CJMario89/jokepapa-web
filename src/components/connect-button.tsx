@@ -86,7 +86,16 @@ const ConnectButton = () => {
         <ConnectModal
           trigger={
             <Button disabled={!!currentAccount}>
-              {currentAccount ? currentAccount.address : "Connect Wallet"}
+              {currentAccount ? (
+                currentAccount.address
+              ) : (
+                <>
+                  <div className="hidden sm:block">Connect Wallet</div>
+                  <div className="block sm:hidden">
+                    <IconWallet />
+                  </div>
+                </>
+              )}
             </Button>
           }
           open={open}
