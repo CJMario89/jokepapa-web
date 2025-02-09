@@ -41,7 +41,9 @@ const ConnectButton = () => {
               <div className="flex items-center gap-2">
                 <IconWallet />
                 <div className="items-center">
-                  {formatAddress(currentAccount?.address)}
+                  {currentAccount?.address
+                    ? formatAddress(currentAccount?.address)
+                    : ""}
                 </div>
               </div>
             </MenubarTrigger>

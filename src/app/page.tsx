@@ -76,7 +76,7 @@ export default function Home() {
             height={50}
           />
           <div className="font-normal hidden sm:block">Follow on</div>
-          <Link href="https://jokepapa.fun">
+          <Link href="https://x.com/thejokepapa">
             <IconX />
           </Link>
         </div>
