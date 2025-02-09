@@ -1,101 +1,152 @@
+"use client";
+
 import Image from "next/image";
+import Jokepapa from "../assets/logo.png";
+import ConnectButton from "@/components/connect-button";
+import HeroBanner from "../assets/hero-banner.png";
+import useGetAssets from "@/application/use-get-assets";
+import { Tweet } from "react-tweet/api";
+import {
+  type TwitterComponents,
+  enrichTweet,
+  TweetContainer,
+  TweetHeader,
+  TweetBody,
+  TweetMedia,
+  QuotedTweet,
+  TweetInfo,
+  TweetActions,
+} from "react-tweet";
+import MintModal from "@/components/mint-modal";
+import { ExternalLinkIcon, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { useState } from "react";
+import IconX from "@/components/icons/x";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export default function Home() {
+export const MyTweet = ({
+  tweet: t,
+  components,
+}: {
+  tweet?: Tweet;
+  components?: TwitterComponents;
+}) => {
+  console.log(t);
+  const tweet = enrichTweet(t ?? ({} as Tweet));
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <TweetContainer className="!my-[0px] h-full flex flex-col">
+      <div className="flex flex-col flex-1 h-full">
+        <TweetHeader tweet={tweet} components={components} />
+        <div className="flex-1">
+          <TweetBody tweet={tweet} />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        {tweet.mediaDetails?.length ? (
+          <TweetMedia tweet={tweet} components={components} />
+        ) : null}
+        {tweet.quoted_tweet && <QuotedTweet tweet={tweet.quoted_tweet} />}
+        <TweetInfo tweet={tweet} />
+        <TweetActions tweet={tweet} />
+      </div>
+    </TweetContainer>
+  );
+};
+
+const limit = 6;
+export default function Home() {
+  const [page, setPage] = useState(0);
+  const { assets, error, isPending } = useGetAssets({
+    limit,
+    offset: page * limit,
+  });
+  const count = assets?.[0]?.count ?? "0";
+  const hasLoadMore = Number(count) > (page + 1) * limit;
+
+  console.log(assets);
+  console.log(error);
+  return (
+    <div className="flex flex-col items-center gap-4 sm:gap-8">
+      <div className="p-4 grid grid-cols-3 gap-4 w-full fixed top-[0px] bg-[#000000] z-[999]">
+        <div className="flex gap-2 items-center justify-start">
           <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+            src={Jokepapa.src}
+            alt="Logo"
+            className="rounded-full sm:w-[50px] sm:h-[50px] w-[30px] h-[30px]"
+            width={50}
+            height={50}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <div className="font-normal hidden sm:block">Follow on</div>
+          <Link href="">
+            <IconX />
+          </Link>
+        </div>
+        <div className="flex gap-2 items-center text-xl sm:text-5xl text-center font-bold justify-center">
+          Jokepapa
+        </div>
+        <div className="flex gap-2 items-center justify-end">
+          <ConnectButton />
+        </div>
+      </div>
+      <div className="flex justify-center mt-[62px] sm:mt-[82px]">
+        <Image
+          src={HeroBanner.src}
+          alt="Hero Banner"
+          width={1920}
+          height={690}
+        />
+      </div>
+      <div className="flex gap-2 items-center text-xl sm:text-5xl text-center font-bold justify-center">
+        Trending Jokes...
+      </div>
+
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 p-4 max-w-[1024px]">
+        {assets?.map((asset) => (
+          <div
+            key={asset.id}
+            className="flex flex-col gap-2 items-center bg-[#15202B] p-4 pt-3 rounded-lg"
+          >
+            <div className="text-3xl font-bold flex-1 flex gap-2 items-center">
+              <Image
+                src={asset.iconUrl}
+                alt={asset.symbol}
+                className="rounded-full"
+                width={30}
+                height={30}
+              />
+              <div className="mt-1">${asset.symbol}</div>
+              <Link href={asset.tokenUrl} target="_blank">
+                <ExternalLinkIcon />
+              </Link>
+            </div>
+            <div className="block w-full h-full">
+              <div data-theme="dark" className="h-full w-full">
+                <MyTweet tweet={asset.tweet} />
+              </div>
+            </div>
+            <MintModal asset={asset} />
+          </div>
+        ))}
+        {isPending &&
+          Array.from(Array(limit).keys()).map((i) => (
+            <Skeleton key={i} className="h-72 w-full rounded-lg" />
+          ))}
+      </div>
+
+      <Button
+        onClick={() => {
+          setPage(page + 1);
+        }}
+        className={`self-center mt-4 text-2xl rounded-full ${
+          hasLoadMore ? "" : "opacity-0 invisible"
+        }`}
+      >
+        {isPending && <Loader2 className={`animate-spin`} />}
+        Load More
+      </Button>
+
+      <div className="flex gap-2 items-center text-xl sm:text-5xl text-center font-bold justify-center my-8">
+        Laugh to Earn with Jokepapa!
+      </div>
     </div>
   );
 }
