@@ -25,7 +25,7 @@ import { useState } from "react";
 import IconX from "@/components/icons/x";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export const MyTweet = ({
+const MyTweet = ({
   tweet: t,
   components,
 }: {
