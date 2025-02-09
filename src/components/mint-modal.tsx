@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import useMintToken from "@/application/use-mint-token";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { ConnectButton, useCurrentAccount } from "@mysten/dapp-kit";
 
 const inputClassName = "!bg-[#15202B] rounded-lg p-4 w-full text-xl";
 
@@ -26,6 +27,7 @@ const MintModal = ({ asset }: { asset: Asset }) => {
   const [open, setOpen] = useState(false);
   const [suiAmount, setSuiAmount] = useState("1");
   const [tokenAmount, setTokenAmount] = useState((1 / price).toString());
+  const account = useCurrentAccount();
   const { mutate: mint, isPending: isMinting } = useMintToken({
     onSuccess: () => {
       setOpen(false);
@@ -37,14 +39,18 @@ const MintModal = ({ asset }: { asset: Asset }) => {
   });
 
   useEffect(() => {
+    setSuiAmount("1");
+    setTokenAmount((1 / price).toString());
     if (open) {
-      setSuiAmount("1");
-      setTokenAmount((1 / price).toString());
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
     }
   }, [open]);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <div
+        onClick={() => setOpen(false)}
         className={`w-full h-full z-[999] fixed top-0 left-0 bg-black opacity-50 ${
           open ? "block" : "hidden"
         }`}
@@ -114,22 +120,31 @@ const MintModal = ({ asset }: { asset: Asset }) => {
             Lauch price: 1 ${asset.symbol} = {asset.mintPrice} Sui
           </div>
         </div>
-        <DialogFooter className="sm:justify-start">
-          <Button
-            className="rounded-full mt-1 text-2xl"
-            onClick={() => {
-              mint({
-                mintPool: asset.mintPool,
-                cointype: asset.coinType,
-                suiAmount,
-                tokenAmount,
-              });
-            }}
-            disabled={isMinting}
-          >
-            {isMinting && <Loader2 className="animate-spin" />}
-            Mint
-          </Button>
+        <DialogFooter className=" sm:flex-col flex flex-col items-center gap-4">
+          <div className="text-sm px-8 text-center">
+            In the Beta version, tokens are minted on the testnet, so you need
+            to switch to the <span className="font-bold text-lg">testnet</span>{" "}
+            to mint tokens.
+          </div>
+          {Boolean(account?.address) ? (
+            <Button
+              className="rounded-full mt-1 text-2xl"
+              onClick={() => {
+                mint({
+                  mintPool: asset.mintPool,
+                  cointype: asset.coinType,
+                  suiAmount,
+                  tokenAmount,
+                });
+              }}
+              disabled={isMinting}
+            >
+              {isMinting && <Loader2 className="animate-spin" />}
+              Mint
+            </Button>
+          ) : (
+            <ConnectButton />
+          )}
         </DialogFooter>
         <DialogClose className="absolute" asChild>
           <Button
