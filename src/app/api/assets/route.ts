@@ -84,8 +84,5 @@ export async function GET(request: Request) {
 }
 
 function removeMetionAndAddress(text?: string) {
-  return text
-    ?.replace(/@[a-zA-Z0-9_]+/g, "")
-    .replace(/0x[a-fA-F0-9]{64}/g, "")
-    .replace(/\n/g, " ");
+  return text?.replace(/0x[a-fA-F0-9]{64}/g, "").replace(/\n/g, " ");
 }
